@@ -17,7 +17,6 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('hi');
   }
 
 }

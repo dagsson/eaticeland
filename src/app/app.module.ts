@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { ListComponent } from './list/list.component';
 import { MapComponent } from './map/map.component';
 import { FoodService } from './services/food.service';
+import { MapService } from './services/map.service';
 
 
 @NgModule({
@@ -17,7 +18,7 @@ import { FoodService } from './services/food.service';
   imports: [
     BrowserModule
   ],
-  providers: [FoodService],
+  providers: [FoodService, MapService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

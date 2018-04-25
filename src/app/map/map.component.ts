@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { MapService } from '../services/map.service';
+import { EIFood } from '../shared/food.model';
 
 @Component({
   selector: 'app-map',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MapComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _mapService: MapService) { }
+
+  food: any;
 
   ngOnInit() {
+    this._mapService.getMap()
   }
 
 }
