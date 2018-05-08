@@ -1,0 +1,14 @@
+.sidebar-header {
+    padding: 5%;
+    text-align: center;
+}
+
+#menu {
+    padding: 5%;
+    text-align: center;
+}
+
+#menu[_ngcontent-c1] > li {
+    background-color: orange;
+    cursor: pointer !important;
+}

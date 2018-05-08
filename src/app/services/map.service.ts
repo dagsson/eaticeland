@@ -7,11 +7,7 @@ import * as mapboxgl from 'mapbox-gl';
 
 
 var apiToken = environment.MAPBOX_API_KEY;
-declare var omnivore: any;
-declare var L: any;
 
-const defaultCoords: number[] = [64.970529, -19.058391]
-const defaultZoom: number = 5.55
 
 @Injectable()
 export class MapService {
@@ -20,24 +16,22 @@ export class MapService {
   }
 
   getMap() {
-    var map = L.map('map').setView(defaultCoords, defaultZoom);
-    
-        map.maxZoom = 100;
-    
-        L.tileLayer('https://api.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-          //attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-          maxZoom: 18,
-          id: 'mapbox.light',
-          accessToken: apiToken
-        }).addTo(map);
-
+   var mapboxgl = require('mapbox-gl/dist/mapbox-gl.js'); 
+   mapboxgl.accessToken = apiToken
+   var map = new mapboxgl.Map({
+   container: 'map',
+   style: 'mapbox://styles/dagsson/cj99p8osy3in82smvtx2ie7x8',
+   zoom: 5.55,
+   minZoom: 5.6,
+   center: [-19.058391, 64.970529]
+   });
         map.on('load', function () {
           map.addSource('naut', {
               type: 'vector',
-              url: 'mapbox://dagsson.cj98f0o860q2w33t4cyvvfhib-2egtj'
+              url: 'mapbox://dagsson.cjgs5txtr0can33pay8boe6r3-209zm'
           });
           map.addLayer({
-              'id': 'naut',
+              'id': 'Nautgripir',
               'type': 'circle',
               'source': 'naut',
               'layout': {
@@ -50,24 +44,24 @@ export class MapService {
                   },
                   'circle-color': 'rgba(55,148,179,1)'
               },
-              'source-layer': 'naut_test'
+              'source-layer': 'nautgripir_test'
           });
-          map.on('click', 'naut', function (e) {
+          map.on('click', 'Nautgripir', function (e) {
               new mapboxgl.Popup()
                   .setLngLat(e.lngLat)
-                  .setHTML(e.features[0].properties.Stodvarnafn)
+                  .setHTML(e.features[0].properties.Address)
                   .addTo(map);
-              document.getElementById('info').innerHTML = e.features[0].properties.Stodvarnafn;
-              document.getElementById('foodtype').innerHTML = e.features[0].properties.Tegund;
+              document.getElementById('info').innerHTML = e.features[0].properties.Address;
+              document.getElementById('foodtype').innerHTML = e.features[0].properties.Type;
           });
       
           // Change the cursor to a pointer when the mouse is over the states layer.
-          map.on('mouseenter', 'naut', function () {
+          map.on('mouseenter', 'Nautgripir', function () {
               map.getCanvas().style.cursor = 'pointer';
           });
       
           // Change it back to a pointer when it leaves.
-          map.on('mouseleave', 'naut', function () {
+          map.on('mouseleave', 'Nautgripir', function () {
               map.getCanvas().style.cursor = '';
           });
       
@@ -76,7 +70,8 @@ export class MapService {
               url: 'mapbox://dagsson.cj9a68xf3187g2qor841q1dx9-1gl9e'
           });
           map.addLayer({
-              'id': 'kind',
+              'id': 'Sauðfé',
+              'icon': '',
               'type': 'circle',
               'source': 'kind',
               'layout': {
@@ -91,7 +86,7 @@ export class MapService {
               },
               'source-layer': 'kind_test'
           });
-          map.on('click', 'kind', function (e) {
+          map.on('click', 'Sauðfé', function (e) {
               new mapboxgl.Popup()
                   .setLngLat(e.lngLat)
                   .setHTML(e.features[0].properties.Stodvarnafn)
@@ -101,25 +96,34 @@ export class MapService {
           });
       
           // Change the cursor to a pointer when the mouse is over the states layer.
-          map.on('mouseenter', 'kind', function () {
+          map.on('mouseenter', 'Sauðfé', function () {
               map.getCanvas().style.cursor = 'pointer';
           });
       
           // Change it back to a pointer when it leaves.
-          map.on('mouseleave', 'kind', function () {
+          map.on('mouseleave', 'Sauðfé', function () {
               map.getCanvas().style.cursor = '';
           });
+
+          
       });
+
       
-      var toggleableLayerIds = [ 'naut', 'kind' ];
+
+
+      
+      var toggleableLayerIds = [ 'Nautgripir', 'Sauðfé' ];
       
       for (var i = 0; i < toggleableLayerIds.length; i++) {
           var id = toggleableLayerIds[i];
+
+          var foodicon = document.createElement('img');
       
-          var link = document.createElement('a');
-          link.href = '#';
+          var link = document.createElement('li');
+          //link.href = '#';
           link.className = 'active';
           link.textContent = id;
+          link.appendChild(foodicon);
       
           link.onclick = function (e) {
               var clickedLayer = this.textContent;
@@ -139,6 +143,7 @@ export class MapService {
       
           var layers = document.getElementById('menu');
           layers.appendChild(link);
+
       }
   }
 

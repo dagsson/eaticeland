@@ -1,16 +1,19 @@
 
-<nav class="navbar navbar-light bg-light">
-    <span class="navbar-text">
-      Matarlandslagið
-    </span>
-  </nav>
-<div class="container">
-  <div class="row">
-      <div class="col-4">
-          <app-list></app-list>
-      </div>
-      <div class="col-8">
-          <app-map></app-map>
-      </div>
-  </div>
+<div class="wrapper">
+        
+            <!-- Sidebar -->
+            <nav id="sidebar">
+                <app-list></app-list>
+            </nav>
+        
+            <!-- Page Content -->
+            <div id="content" class="col-sm-12">
+                    <button type="button" id="sidebarCollapse" class="navbar-btn">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                    </button>
+                <app-map></app-map>
+            </div>
+        
 </div>

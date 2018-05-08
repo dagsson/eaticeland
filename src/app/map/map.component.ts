@@ -15,6 +15,7 @@ export class MapComponent implements OnInit {
 
   ngOnInit() {
     this._mapService.getMap()
+   
   }
 
-}
+  }
