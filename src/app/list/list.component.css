@@ -3,12 +3,35 @@
     text-align: center;
 }
 
+.sidebar-header h3 {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: white;
+}
+
 #menu {
-    padding: 5%;
     text-align: center;
+    margin-bottom: 5px;
+    display: -webkit-inline-box;
+    cursor: pointer;
 }
 
 #menu[_ngcontent-c1] > li {
-    background-color: orange;
     cursor: pointer !important;
 }
+
+#menu > .list-group-item {
+    color: black !important;
+    border: none !important;
+    margin-bottom: none !important;
+}
+
+#menu[_ngcontent-c1] .list-group-item:first-child {
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+}
+
+#sidebar[_ngcontent-c0] #menu .pp-tab {
+    background-color: white !important;
+    padding: 10px;
+}
+

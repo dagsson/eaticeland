@@ -1,2 +1,65 @@
 
 #map { position:absolute; top:0; bottom:0; width:100%; }
+
+#station_card {
+    position: absolute;
+    z-index: 100;
+    background-color: white;
+    opacity: 0.9;
+    bottom: 0px;
+    padding: 3%;
+    color: #818182;
+    transition: .2;
+    width: 100%;
+    text-align: center;
+}
+
+#station_card h3 {
+    color: black;
+    font-family: montserrat;
+}
+
+#station_card h2 {
+font-size: 2rem;
+color: #17a2b8;
+text-transform: uppercase;
+letter-spacing: 3px;
+font-family: montserrat;
+padding-bottom: 5px;
+}
+
+#location {
+    font-weight: bold;
+}
+
+#tagline {
+    text-align: center;
+    font-family: sans-serif;
+    color: rgb(180, 180, 180);
+    font-weight: 100;
+    letter-spacing: .6px;
+    padding: 5px;
+}
+
+.iconwrap {
+    text-align: center;
+}
+
+.iconwrap img {
+    height: 70px;
+}
+
+#foodinc {
+    height: 50px;
+    margin-bottom: 15px;
+}
+
+#primary-producer {
+    display: -webkit-inline-box;
+    list-style: none;
+    padding-left: 0px;
+}
+
+#primary-producer li {
+    margin-right: 15px;
+}
