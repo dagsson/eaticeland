@@ -1,8 +1,17 @@
 
 #map { position:absolute; top:0; bottom:0; width:100%; }
 
-#station_card {
+#dashboard {
     position: absolute;
+    bottom: -515px;
+    transition: .3s;
+}
+
+h5 {
+    font-family:"source sans pro";
+}
+
+#station_card {
     z-index: 100;
     background-color: white;
     opacity: 0.9;
@@ -12,6 +21,8 @@
     transition: .2;
     width: 100%;
     text-align: center;
+    border: 1px solid #d6d6d6;
+    border-radius: 5px;
 }
 
 #station_card h3 {
@@ -62,4 +73,9 @@ padding-bottom: 5px;
 
 #primary-producer li {
     margin-right: 15px;
+}
+
+#matis_logo {
+    height: 100px;
+    padding: 2%;
 }

@@ -13,6 +13,10 @@ body { margin:0;
     height: 100vh !important;    
 }
 
+#menu {
+    margin-top: 18px !important;
+}
+
 #menu > .list-group-item {
     color: black !important;
     border: none !important;
@@ -33,7 +37,6 @@ body { margin:0;
     z-index: 1000;
     text-align: center !important;
     width: 100%;
-    top: 16px;
 }
 
 #menu .pp-tab {

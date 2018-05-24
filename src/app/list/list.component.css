@@ -10,9 +10,9 @@
 
 #menu {
     text-align: center;
-    margin-bottom: 5px;
     display: -webkit-inline-box;
     cursor: pointer;
+    margin-top: 18px !important;
 }
 
 #menu[_ngcontent-c1] > li {
@@ -30,8 +30,17 @@
     border-top-right-radius: 0px !important;
 }
 
-#sidebar[_ngcontent-c0] #menu .pp-tab {
-    background-color: white !important;
-    padding: 10px;
+.pp-leit {
+    color: rgb(1, 102, 94);
+    border-color: rgb(1, 102, 94)
+}
+
+nav {
+    font-family: 'Source Sans Pro', sans-serif;
+    padding: 10px 50px;
+}
+
+#navbarSupportedContent ul {
+    margin: 0 auto;
 }
 
