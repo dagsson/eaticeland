@@ -40,7 +40,8 @@ export class MapService {
                 trackUserLocation: true
             }));
 
-            map.addControl(new mapboxgl.NavigationControl());
+            var nav = new mapboxgl.NavigationControl();
+            map.addControl(nav, 'bottom-right');
 
           map.addSource('naut', {
               type: 'vector',
