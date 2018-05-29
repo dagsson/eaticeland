@@ -37,20 +37,18 @@
                             </div>
                           </li>
                           <form class="form-inline my-2 my-lg-0">
-                                <input id='feature-filter' class="form-control mr-sm-2" type="search" placeholder="Sláðu inn leitarorð" aria-label="Search">
-                                <button class="btn btn-outline-success my-2 my-sm-0 pp-leit" type="submit">Leita</button>
-                                
-                              </form>
-                              
+                                <input id='feature-filter' (keyup)="onKey($event)" class="form-control mr-sm-2" type="search" placeholder="Sláðu inn leitarorð" aria-label="Search">
+                                <button class="btn btn-outline-success my-2 my-sm-0 pp-leit" type="submit">Leita</button>                               
+                          </form>
+                                                     
                   </ul>
                   
                   
                 </div>
               </nav>
               
-              <div role="tablist" id="menu">
+              
                   
-              </div>
               <!--<a class="list-group-item active" id="selectall">Velja allt</a>-->
 
               

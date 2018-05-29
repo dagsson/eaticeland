@@ -3,12 +3,16 @@
 
 #dashboard {
     position: absolute;
-    bottom: -515px;
+    bottom: -550px;
     transition: .3s;
 }
 
-h5 {
-    font-family:"source sans pro";
+h5, h6 {
+    font-family: "source sans pro";
+}
+
+h3 {
+    font-size: 1.2rem;
 }
 
 #station_card {
@@ -16,18 +20,16 @@ h5 {
     background-color: white;
     opacity: 0.9;
     bottom: 0px;
-    padding: 3%;
     color: #818182;
     transition: .2;
     width: 100%;
     text-align: center;
     border: 1px solid #d6d6d6;
-    border-radius: 5px;
+    padding: 0px;
 }
 
-#station_card h3 {
-    color: black;
-    font-family: montserrat;
+#station_card div {
+    padding: 3% 7%;
 }
 
 #station_card h2 {
@@ -39,8 +41,12 @@ font-family: montserrat;
 padding-bottom: 5px;
 }
 
-#location {
-    font-weight: bold;
+#info {
+    color: white;
+    padding: 12px;
+    padding-left: 12px;
+    font-family: montserrat;
+    font-size: 14px;
 }
 
 #tagline {
@@ -61,8 +67,12 @@ padding-bottom: 5px;
 }
 
 #foodinc {
-    height: 50px;
-    margin-bottom: 15px;
+    height: 35px;
+}
+
+#foodtype, #foodtypeII, #location {
+    font-size: 1rem;
+    color: black;
 }
 
 #primary-producer {
@@ -78,4 +88,46 @@ padding-bottom: 5px;
 #matis_logo {
     height: 100px;
     padding: 2%;
+}
+
+#menu {
+    text-align: center;
+    display: -webkit-inline-box;
+    cursor: pointer;
+    margin-top: 18px !important;
+    z-index: 100;
+}
+
+#menu[_ngcontent-c1] > li {
+    cursor: pointer !important;
+}
+
+#menu > .list-group-item {
+    color: black !important;
+    border: none !important;
+    margin-bottom: none !important;
+}
+
+#menu[_ngcontent-c1] .list-group-item:first-child {
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+}
+
+#tabs {
+    position: absolute;
+    bottom: 0px !important;
+    z-index: 100;
+    text-align: center;
+    font-size: 14px;
+}
+
+.details {
+    text-align: left;
+}
+
+#close_button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    height: 15px;
 }

@@ -1,22 +1,32 @@
 <div id="map">
+    <div id="tabs" class="col-sm-12">
+            <div role="tablist" id="menu"></div>
+    </div>
     <div id="dashboard" class="col-sm-12">
+            
         <div id="station_info" class="row">
-            <!--<h2>Matarlandslagið</h2>-->
-                <div class="col-sm-4">
-                    
-                </div>
+                
+                <div class="col-sm-4"></div>
                 <div id="station_card" class="col-sm-4">
-                <img id="foodinc" src=""/>
-                <h3 id="info"></h3>
-                <h5 id="location"></h5>
-                <h5 id="foodtype"></h5>
-                <h5 id="foodtypeII"></h5>
+                    <div id="card-heading"><img id="foodinc" src=''/><span id="info"></span></div>
+                    <img src="../assets/img/close.png" (click)="close($event)" id="close_button"/>
+                    <div class="row">
+                    <div class="col-sm-6 details">
+                        <h6>Staðsetning:</h6>
+                        <h5 id="location"></h5>
+                    </div>
+                    <div class="col-sm-6 details">
+                        <h6>Starfsemi:</h6>
+                        <h5 id="foodtype"></h5>
+                        <h5 id="foodtypeII"></h5>
+                    </div>
+                    </div>
                 </div>
-                <div class="col-sm-4">
-                    
-                </div>
+                <div class="col-sm-4"></div>
             
         </div>
+        
     </div>
+ 
 </div>
 

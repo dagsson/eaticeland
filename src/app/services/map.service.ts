@@ -27,6 +27,68 @@ export class MapService {
    });
 
    
+/*
+   function renderListings(features) {
+    // Clear any existing listings
+    listingEl.innerHTML = '';
+    if (features.length) {
+        features.forEach(function(feature) {
+            var prop = feature.properties;
+            var item = document.createElement('a');
+            item.href = prop.wikipedia;
+            item.target = '_blank';
+            item.textContent = prop.Name;
+            listingEl.appendChild(item);
+        });
+
+        // Show the filter input
+        (<HTMLElement>filterEl.parentNode).style.display = 'block';
+
+    } else {
+        var empty = document.createElement('p');
+        empty.textContent = 'Drag the map to populate results';
+        listingEl.appendChild(empty);
+
+        // Hide the filter input
+
+        (<HTMLElement>filterEl.parentNode).style.display = 'none';
+
+        // remove features filter
+        map.setFilter('Nautgripir', ['has', 'Name']);
+    }
+}
+
+   function normalize(string) {
+    return string.trim().toLowerCase();
+}
+
+
+
+   filterEl.addEventListener('test', function(e) {
+       console.log('what!!!!');
+    var element = e.currentTarget as HTMLInputElement;
+    var value = element.value;
+    value = normalize(value);
+
+    // Filter visible features that don't match the input value.
+    var filtered = listinn.filter(function(feature) {
+        var name = normalize(feature.properties.name);
+        var code = normalize(feature.properties.abbrev);
+        return name.indexOf(value) > -1 || code.indexOf(value) > -1;
+    });
+
+    // Populate the sidebar with filtered results
+    renderListings(filtered);
+
+    // Set the filter to populate features into the layer.
+    map.setFilter('airport', ['match', ['get', 'abbrev'], filtered.map(function(feature) {
+        return feature.properties.abbrev;
+    }), true, false]);
+});
+
+// Call this function on initialization
+// passing an empty array to render an empty state
+renderListings([]);*/
 
    var popup = new mapboxgl.Popup({
     closeButton: false,
@@ -37,7 +99,8 @@ export class MapService {
                 positionOptions: {
                     enableHighAccuracy: true
                 },
-                trackUserLocation: true
+                trackUserLocation: true,
+                position: 'bottom-right'
             }));
 
             var nav = new mapboxgl.NavigationControl();
@@ -69,8 +132,9 @@ export class MapService {
               document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
               document.getElementById('foodtypeII').innerHTML = e.features[0].properties.ProductII;
               document.getElementById('location').innerHTML = e.features[0].properties.Area;
-              document.getElementById('dashboard').setAttribute( 'style', 'bottom:30px');
-              document.getElementById('foodinc').setAttribute( 'src', '../assets/img/011-animals.png' );
+              document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
+              document.getElementById('foodinc').setAttribute( 'src', '../assets/img/011-animals-w.png' );
+              document.getElementById('card-heading').setAttribute( 'style', 'background-color: rgb(84,48,5)' );
           });
       
           // Change the cursor to a pointer when the mouse is over the states layer.
@@ -126,8 +190,9 @@ export class MapService {
               document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
               document.getElementById('foodtypeII').innerHTML = e.features[0].properties.ProductII;
               document.getElementById('location').innerHTML = e.features[0].properties.Place;
-              document.getElementById('dashboard').setAttribute( 'style', 'bottom:30px');
-              document.getElementById('foodinc').setAttribute( 'src', '../assets/img/007-animals-5.png' );
+              document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
+              document.getElementById('foodinc').setAttribute( 'src', '../assets/img/007-animals-5-w.png' );
+              document.getElementById('card-heading').setAttribute( 'style', 'background-color: #8c510a' );
           });
       
           // Change the cursor to a pointer when the mouse is over the states layer.
@@ -180,27 +245,39 @@ export class MapService {
             'source-layer': 'Thorungar_merged'
         });
         map.on('click', 'Þörungar', function (e) {
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(e.features[0].properties.Name)
-                .addTo(map);
             document.getElementById('info').innerHTML = e.features[0].properties.Name;
             document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
             document.getElementById('foodtypeII').innerHTML = e.features[0].properties.Info;
             document.getElementById('location').innerHTML = e.features[0].properties.Area;
-            document.getElementById('dashboard').setAttribute( 'style', 'bottom:30px');
-            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/003-sea.png' );
+            document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
+            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/003-sea-w.png' );
+            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #bf812d' );
         });
     
-        // Change the cursor to a pointer when the mouse is over the states layer.
-        map.on('mouseenter', 'Þörungar', function () {
-            map.getCanvas().style.cursor = 'pointer';
-        });
-    
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'Þörungar', function () {
-            map.getCanvas().style.cursor = '';
-        });
+       // Change the cursor to a pointer when the mouse is over the states layer.
+       map.on('mouseenter', 'Þörungar', function (e) {
+        map.getCanvas().style.cursor = 'pointer';
+        var coordinates = e.features[0].geometry.coordinates.slice();
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        popup.setLngLat(coordinates)
+            .setHTML(e.features[0].properties.Name)
+            .addTo(map);
+      });
+  
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'Þörungar', function () {
+          map.getCanvas().style.cursor = '';
+          popup.remove();
+      });
 
         // Hross
 
@@ -230,19 +307,35 @@ export class MapService {
             document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
             document.getElementById('foodtypeII').innerHTML = e.features[0].properties.Info;
             document.getElementById('location').innerHTML = e.features[0].properties.Area;
-            document.getElementById('dashboard').setAttribute( 'style', 'bottom:30px');
-            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/009-animals-3.png' );
+            document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
+            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/009-animals-3-w.png' );
+            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #dfc27d' );
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
-        map.on('mouseenter', 'Hestar', function () {
-            map.getCanvas().style.cursor = 'pointer';
-        });
-    
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'Hestar', function () {
-            map.getCanvas().style.cursor = '';
-        });
+       map.on('mouseenter', 'Hestar', function (e) {
+        map.getCanvas().style.cursor = 'pointer';
+        var coordinates = e.features[0].geometry.coordinates.slice();
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        popup.setLngLat(coordinates)
+            .setHTML(e.features[0].properties.Name)
+            .addTo(map);
+      });
+  
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'Hestar', function () {
+          map.getCanvas().style.cursor = '';
+          popup.remove();
+      });
 
         // Fiskeldi
 
@@ -268,27 +361,39 @@ export class MapService {
             'source-layer': 'Fiskeldi_merged'
         });
         map.on('click', 'Fiskeldi', function (e) {
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(e.features[0].properties.Name)
-                .addTo(map);
             document.getElementById('info').innerHTML = e.features[0].properties.Name;
             document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
             document.getElementById('foodtypeII').innerHTML = e.features[0].properties.Info;
             document.getElementById('location').innerHTML = e.features[0].properties.Area;
-            document.getElementById('dashboard').setAttribute( 'style', 'bottom:30px');
-            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/006-food-1.png' );
+            document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
+            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/006-food-1-w.png' );
+            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #f6e8c3' );
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
-        map.on('mouseenter', 'Fiskeldi', function () {
-            map.getCanvas().style.cursor = 'pointer';
-        });
-    
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'Fiskeldi', function () {
-            map.getCanvas().style.cursor = '';
-        });
+       map.on('mouseenter', 'Fiskeldi', function (e) {
+        map.getCanvas().style.cursor = 'pointer';
+        var coordinates = e.features[0].geometry.coordinates.slice();
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        popup.setLngLat(coordinates)
+            .setHTML(e.features[0].properties.Name)
+            .addTo(map);
+      });
+  
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'Fiskeldi', function () {
+          map.getCanvas().style.cursor = '';
+          popup.remove();
+      });
 
         // Alifuglar
 
@@ -314,27 +419,39 @@ export class MapService {
             'source-layer': 'Alifuglar_merged'
         });
         map.on('click', 'Alifuglar', function (e) {
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(e.features[0].properties.Name)
-                .addTo(map);
             document.getElementById('info').innerHTML = e.features[0].properties.Name;
             document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
             document.getElementById('foodtypeII').innerHTML = e.features[0].properties.Info;
             document.getElementById('location').innerHTML = e.features[0].properties.Area;
-            document.getElementById('dashboard').setAttribute( 'style', 'bottom:30px');
-            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/008-animals-4.png' );
+            document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
+            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/008-animals-4-w.png' );
+            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #b1200f' );
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
-        map.on('mouseenter', 'Alifuglar', function () {
-            map.getCanvas().style.cursor = 'pointer';
-        });
-    
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'Alifuglar', function () {
-            map.getCanvas().style.cursor = '';
-        });
+       map.on('mouseenter', 'Alifuglar', function (e) {
+        map.getCanvas().style.cursor = 'pointer';
+        var coordinates = e.features[0].geometry.coordinates.slice();
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        popup.setLngLat(coordinates)
+            .setHTML(e.features[0].properties.Name)
+            .addTo(map);
+      });
+  
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'Alifuglar', function () {
+          map.getCanvas().style.cursor = '';
+          popup.remove();
+      });
 
         // Skip
 
@@ -360,27 +477,39 @@ export class MapService {
             'source-layer': 'Skip_merged'
         });
         map.on('click', 'Skip', function (e) {
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(e.features[0].properties.Name)
-                .addTo(map);
             document.getElementById('info').innerHTML = e.features[0].properties.Name;
             document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
             document.getElementById('foodtypeII').innerHTML = e.features[0].properties.Info;
             document.getElementById('location').innerHTML = e.features[0].properties.Area;
-            document.getElementById('dashboard').setAttribute( 'style', 'bottom:30px');
-            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/001-transport.png' );
+            document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
+            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/001-transport-w.png' );
+            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #fa482e' );
         });
     
-        // Change the cursor to a pointer when the mouse is over the states layer.
-        map.on('mouseenter', 'Skip', function () {
-            map.getCanvas().style.cursor = 'pointer';
-        });
-    
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'Skip', function () {
-            map.getCanvas().style.cursor = '';
-        });
+    // Change the cursor to a pointer when the mouse is over the states layer.
+    map.on('mouseenter', 'Skip', function (e) {
+        map.getCanvas().style.cursor = 'pointer';
+        var coordinates = e.features[0].geometry.coordinates.slice();
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        popup.setLngLat(coordinates)
+            .setHTML(e.features[0].properties.Name)
+            .addTo(map);
+      });
+  
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'Skip', function () {
+          map.getCanvas().style.cursor = '';
+          popup.remove();
+      });
 
         // Geitur
 
@@ -406,27 +535,39 @@ export class MapService {
             'source-layer': 'Geitur_merged'
         });
         map.on('click', 'Geitur', function (e) {
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(e.features[0].properties.Name)
-                .addTo(map);
             document.getElementById('info').innerHTML = e.features[0].properties.Name;
             document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
             document.getElementById('foodtypeII').innerHTML = e.features[0].properties.Info;
             document.getElementById('location').innerHTML = e.features[0].properties.Area;
-            document.getElementById('dashboard').setAttribute( 'style', 'bottom:30px');
-            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/002-animals-1.png' );
+            document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
+            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/002-animals-1-w.png' );
+            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #f4a32e' );
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
-        map.on('mouseenter', 'Geitur', function () {
-            map.getCanvas().style.cursor = 'pointer';
-        });
-    
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'Geitur', function () {
-            map.getCanvas().style.cursor = '';
-        });
+       map.on('mouseenter', 'Geitur', function (e) {
+        map.getCanvas().style.cursor = 'pointer';
+        var coordinates = e.features[0].geometry.coordinates.slice();
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        popup.setLngLat(coordinates)
+            .setHTML(e.features[0].properties.Name)
+            .addTo(map);
+      });
+  
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'Geitur', function () {
+          map.getCanvas().style.cursor = '';
+          popup.remove();
+      });
 
         // Matjurtir
 
@@ -452,27 +593,39 @@ export class MapService {
             'source-layer': 'Matjurtir_merged'
         });
         map.on('click', 'Matjurtir', function (e) {
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(e.features[0].properties.Name)
-                .addTo(map);
             document.getElementById('info').innerHTML = e.features[0].properties.Name;
             document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
             document.getElementById('foodtypeII').innerHTML = e.features[0].properties.Info;
             document.getElementById('location').innerHTML = e.features[0].properties.Area;
-            document.getElementById('dashboard').setAttribute( 'style', 'bottom:30px');
-            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/004-nature.png' );
+            document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
+            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/004-nature-w.png' );
+            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #80cdc1' );
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
-        map.on('mouseenter', 'Matjurtir', function () {
-            map.getCanvas().style.cursor = 'pointer';
-        });
-    
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'Matjurtir', function () {
-            map.getCanvas().style.cursor = '';
-        });
+       map.on('mouseenter', 'Matjurtir', function (e) {
+        map.getCanvas().style.cursor = 'pointer';
+        var coordinates = e.features[0].geometry.coordinates.slice();
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        popup.setLngLat(coordinates)
+            .setHTML(e.features[0].properties.Name)
+            .addTo(map);
+      });
+  
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'Matujurtir', function () {
+          map.getCanvas().style.cursor = '';
+          popup.remove();
+      });
 
         // Svin
 
@@ -482,7 +635,7 @@ export class MapService {
         });
         map.addLayer({
             'id': 'Svín',
-            'icon': '',
+            'icon': '../assets/img/010-animals-2.png',
             'type': 'circle',
             'source': 'svin',
             'layout': {
@@ -498,23 +651,19 @@ export class MapService {
             'source-layer': 'Svin_merged'
         });
         map.on('click', 'Svín', function (e) {
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(e.features[0].properties.Name)
-                .addTo(map);
             document.getElementById('info').innerHTML = e.features[0].properties.Name;
             document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
             document.getElementById('foodtypeII').innerHTML = e.features[0].properties.Info;
             document.getElementById('location').innerHTML = e.features[0].properties.Area;
-            document.getElementById('dashboard').setAttribute( 'style', 'bottom:30px');
-            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/010-animals-2.png' );
+            document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
+            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/010-animals-2-w.png' );
+            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #35978f' );
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
         map.on('mouseenter', 'Svín', function (e) {
             map.getCanvas().style.cursor = 'pointer';
             var coordinates = e.features[0].geometry.coordinates.slice();
-            var description = e.features[0].properties.description;
     
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -564,15 +713,15 @@ export class MapService {
             document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
             document.getElementById('foodtypeII').innerHTML = e.features[0].properties.Info;
             document.getElementById('location').innerHTML = e.features[0].properties.Area;
-            document.getElementById('dashboard').setAttribute( 'style', 'bottom:30px');
-            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/005-food.png' );
+            document.getElementById('dashboard').setAttribute( 'style', 'bottom: 115px');
+            document.getElementById('foodinc').setAttribute( 'src', '../assets/img/005-food-w.png' );
+            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #01665e' );
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
         map.on('mouseenter', 'Skelfiskur', function (e) {
             map.getCanvas().style.cursor = 'pointer';
             var coordinates = e.features[0].geometry.coordinates.slice();
-            var description = e.features[0].properties.description;
     
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -596,28 +745,34 @@ export class MapService {
         
           
       });
-      
+      var tabImg = [ '../assets/img/011-animals.png', '../assets/img/007-animals-5.png', '../assets/img/003-sea.png', '../assets/img/009-animals-3.png', '../assets/img/006-food-1.png', '../assets/img/008-animals-4.png', '../assets/img/001-transport.png', '../assets/img/002-animals-1.png', '../assets/img/004-nature.png', '../assets/img/010-animals-2.png', '../assets/img/005-food.png'];
       var toggleableLayerIds = [ 'Nautgripir', 'Sauðfé', 'Þörungar', 'Hestar', 'Fiskeldi', 'Alifuglar', 'Skip', 'Geitur', 'Matjurtir', 'Svín', 'Skelfiskur' ];
       
       for (var i = 0; i < toggleableLayerIds.length; i++) {
           var id = toggleableLayerIds[i];
           var foodicon = document.createElement('img');
           var link = document.createElement('a');
-          var listar = [];
           link.textContent = id;
           link.appendChild(foodicon);
+          link.style.display = "grid";
           link.style.color = "black";
           link.style.backgroundColor = "white";
-          link.style.padding = "20px";
+          link.style.padding = "15px";
           link.style.fontFamily = "Source Sans Pro";
+          link.style.width = '90px';
+          foodicon.setAttribute( 'src', tabImg[i]);
+          foodicon.style.height = "25px";
+          foodicon.style.margin = "10px auto 0px";
+          foodicon.style.opacity = "0.3";
+
           link.onclick = function (e) {  
-            
+            console.log()
             var clickedLayer = this.textContent;
               e.preventDefault();
               e.stopPropagation();
               var bgColor = map.getPaintProperty(clickedLayer, 'circle-color');
               var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-              console.log(clickedLayer);
+
               if (visibility === 'none') {
                   this.className = 'pp-tab';
                   map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
@@ -634,6 +789,8 @@ export class MapService {
       
           var layers = document.getElementById('menu');
           layers.appendChild(link);
+
+          
 
       }
   }

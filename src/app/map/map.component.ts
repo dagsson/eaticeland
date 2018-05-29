@@ -9,12 +9,18 @@ import { EIFood } from '../shared/food.model';
 })
 export class MapComponent implements OnInit {
 
+  close(event: any) {
+    console.log("what!!!!");
+    document.getElementById("dashboard").style.bottom = '-550px';
+  }
+
   constructor(private _mapService: MapService) { }
 
   food: any;
 
   ngOnInit() {
     this._mapService.getMap()
+    
   }
 
   }

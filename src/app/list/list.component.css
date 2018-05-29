@@ -8,28 +8,6 @@
     color: white;
 }
 
-#menu {
-    text-align: center;
-    display: -webkit-inline-box;
-    cursor: pointer;
-    margin-top: 18px !important;
-}
-
-#menu[_ngcontent-c1] > li {
-    cursor: pointer !important;
-}
-
-#menu > .list-group-item {
-    color: black !important;
-    border: none !important;
-    margin-bottom: none !important;
-}
-
-#menu[_ngcontent-c1] .list-group-item:first-child {
-    border-top-left-radius: 0px !important;
-    border-top-right-radius: 0px !important;
-}
-
 .pp-leit {
     color: rgb(1, 102, 94);
     border-color: rgb(1, 102, 94)
