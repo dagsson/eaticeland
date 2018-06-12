@@ -26,6 +26,13 @@ export class MapService {
    center: [-19.058391, 64.970529]
    });
 
+   function flyToStore(currentFeature) {
+    map.flyTo({
+      center: currentFeature.geometry.coordinates,
+      zoom: 12
+    });
+  }
+
    
 /*
    function renderListings(features) {
@@ -135,6 +142,8 @@ renderListings([]);*/
               document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
               document.getElementById('foodinc').setAttribute( 'src', '../assets/img/011-animals-w.png' );
               document.getElementById('card-heading').setAttribute( 'style', 'background-color: rgb(84,48,5)' );
+              var clickedPoint = e.features[0];
+              flyToStore(clickedPoint);
           });
       
           // Change the cursor to a pointer when the mouse is over the states layer.
@@ -193,6 +202,8 @@ renderListings([]);*/
               document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
               document.getElementById('foodinc').setAttribute( 'src', '../assets/img/007-animals-5-w.png' );
               document.getElementById('card-heading').setAttribute( 'style', 'background-color: #8c510a' );
+              var clickedPoint = e.features[0];
+              flyToStore(clickedPoint);
           });
       
           // Change the cursor to a pointer when the mouse is over the states layer.
@@ -252,6 +263,8 @@ renderListings([]);*/
             document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
             document.getElementById('foodinc').setAttribute( 'src', '../assets/img/003-sea-w.png' );
             document.getElementById('card-heading').setAttribute( 'style', 'background-color: #bf812d' );
+            var clickedPoint = e.features[0];
+            flyToStore(clickedPoint);
         });
     
        // Change the cursor to a pointer when the mouse is over the states layer.
@@ -298,7 +311,7 @@ renderListings([]);*/
                     'base': 2,
                     'stops': [[8, 3], [16, 180]]
                 },
-                'circle-color': '#dfc27d'
+                'circle-color': '#A57D28'
             },
             'source-layer': 'Hross_merged'
         });
@@ -309,7 +322,9 @@ renderListings([]);*/
             document.getElementById('location').innerHTML = e.features[0].properties.Area;
             document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
             document.getElementById('foodinc').setAttribute( 'src', '../assets/img/009-animals-3-w.png' );
-            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #dfc27d' );
+            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #A57D28' );
+            var clickedPoint = e.features[0];
+            flyToStore(clickedPoint);
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
@@ -356,7 +371,7 @@ renderListings([]);*/
                     'base': 2,
                     'stops': [[8, 3], [16, 180]]
                 },
-                'circle-color': '#f6e8c3'
+                'circle-color': '#dea613'
             },
             'source-layer': 'Fiskeldi_merged'
         });
@@ -367,7 +382,9 @@ renderListings([]);*/
             document.getElementById('location').innerHTML = e.features[0].properties.Area;
             document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
             document.getElementById('foodinc').setAttribute( 'src', '../assets/img/006-food-1-w.png' );
-            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #f6e8c3' );
+            document.getElementById('card-heading').setAttribute( 'style', 'background-color: #dea613' );
+            var clickedPoint = e.features[0];
+            flyToStore(clickedPoint);
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
@@ -426,6 +443,8 @@ renderListings([]);*/
             document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
             document.getElementById('foodinc').setAttribute( 'src', '../assets/img/008-animals-4-w.png' );
             document.getElementById('card-heading').setAttribute( 'style', 'background-color: #b1200f' );
+            var clickedPoint = e.features[0];
+            flyToStore(clickedPoint);
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
@@ -478,12 +497,14 @@ renderListings([]);*/
         });
         map.on('click', 'Skip', function (e) {
             document.getElementById('info').innerHTML = e.features[0].properties.Name;
-            document.getElementById('foodtype').innerHTML = e.features[0].properties.Product;
-            document.getElementById('foodtypeII').innerHTML = e.features[0].properties.Info;
-            document.getElementById('location').innerHTML = e.features[0].properties.Area;
+            document.getElementById('foodtype').innerHTML = e.features[0].properties.Type;
+            document.getElementById('foodtypeII').innerHTML = e.features[0].properties.Size;
+            document.getElementById('location').innerHTML = e.features[0].properties.Place;
             document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
             document.getElementById('foodinc').setAttribute( 'src', '../assets/img/001-transport-w.png' );
             document.getElementById('card-heading').setAttribute( 'style', 'background-color: #fa482e' );
+            var clickedPoint = e.features[0];
+            flyToStore(clickedPoint);
         });
     
     // Change the cursor to a pointer when the mouse is over the states layer.
@@ -542,6 +563,8 @@ renderListings([]);*/
             document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
             document.getElementById('foodinc').setAttribute( 'src', '../assets/img/002-animals-1-w.png' );
             document.getElementById('card-heading').setAttribute( 'style', 'background-color: #f4a32e' );
+            var clickedPoint = e.features[0];
+            flyToStore(clickedPoint);
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
@@ -600,6 +623,8 @@ renderListings([]);*/
             document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
             document.getElementById('foodinc').setAttribute( 'src', '../assets/img/004-nature-w.png' );
             document.getElementById('card-heading').setAttribute( 'style', 'background-color: #80cdc1' );
+            var clickedPoint = e.features[0];
+            flyToStore(clickedPoint);
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
@@ -622,10 +647,11 @@ renderListings([]);*/
       });
   
       // Change it back to a pointer when it leaves.
-      map.on('mouseleave', 'Matujurtir', function () {
+      map.on('mouseleave', 'Matjurtir', function () {
           map.getCanvas().style.cursor = '';
           popup.remove();
       });
+
 
         // Svin
 
@@ -658,6 +684,8 @@ renderListings([]);*/
             document.getElementById('dashboard').setAttribute( 'style', 'bottom:115px');
             document.getElementById('foodinc').setAttribute( 'src', '../assets/img/010-animals-2-w.png' );
             document.getElementById('card-heading').setAttribute( 'style', 'background-color: #35978f' );
+            var clickedPoint = e.features[0];
+            flyToStore(clickedPoint);
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
@@ -716,6 +744,8 @@ renderListings([]);*/
             document.getElementById('dashboard').setAttribute( 'style', 'bottom: 115px');
             document.getElementById('foodinc').setAttribute( 'src', '../assets/img/005-food-w.png' );
             document.getElementById('card-heading').setAttribute( 'style', 'background-color: #01665e' );
+            var clickedPoint = e.features[0];
+            flyToStore(clickedPoint);
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
@@ -742,12 +772,11 @@ renderListings([]);*/
             map.getCanvas().style.cursor = '';
             popup.remove();
         });
-        
-          
+           
       });
       var tabImg = [ '../assets/img/011-animals.png', '../assets/img/007-animals-5.png', '../assets/img/003-sea.png', '../assets/img/009-animals-3.png', '../assets/img/006-food-1.png', '../assets/img/008-animals-4.png', '../assets/img/001-transport.png', '../assets/img/002-animals-1.png', '../assets/img/004-nature.png', '../assets/img/010-animals-2.png', '../assets/img/005-food.png'];
       var toggleableLayerIds = [ 'Nautgripir', 'Sauðfé', 'Þörungar', 'Hestar', 'Fiskeldi', 'Alifuglar', 'Skip', 'Geitur', 'Matjurtir', 'Svín', 'Skelfiskur' ];
-      
+
       for (var i = 0; i < toggleableLayerIds.length; i++) {
           var id = toggleableLayerIds[i];
           var foodicon = document.createElement('img');
@@ -764,9 +793,10 @@ renderListings([]);*/
           foodicon.style.height = "25px";
           foodicon.style.margin = "10px auto 0px";
           foodicon.style.opacity = "0.3";
-
+          var features = map.getSource('skelfiskur');
+          
           link.onclick = function (e) {  
-            console.log()
+            console.log(map.getSource('hross'));
             var clickedLayer = this.textContent;
               e.preventDefault();
               e.stopPropagation();
@@ -786,13 +816,10 @@ renderListings([]);*/
                   this.style.backgroundColor = "white";
               }
           };
-      
           var layers = document.getElementById('menu');
           layers.appendChild(link);
-
-          
-
       }
-  }
+      
+   }
 
 }

@@ -21,7 +21,7 @@ export class ListComponent implements OnInit {
 
   food = FOOD_LIST;
   constructor(private _mapService: MapService) { 
-    
+
   }
 
   ngOnInit() {
