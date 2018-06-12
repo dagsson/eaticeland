@@ -83,3 +83,7 @@ p {
 #menu > .mapboxgl-control-container > .mapboxgl-ctrl-top-right {
     bottom: 20px;
 }
+
+.mapboxgl-ctrl-attrib {
+    display: none !important;
+}

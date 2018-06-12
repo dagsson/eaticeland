@@ -24,7 +24,10 @@ export class MapService {
    zoom: 5.55,
    minZoom: 5.6,
    center: [-19.058391, 64.970529]
+   
    });
+   
+   map.addControl(new mapboxgl.AttributionControl(), 'top-left');
 
    function flyToStore(currentFeature) {
     map.flyTo({
@@ -106,12 +109,13 @@ renderListings([]);*/
                 positionOptions: {
                     enableHighAccuracy: true
                 },
-                trackUserLocation: true,
-                position: 'bottom-right'
-            }));
+                trackUserLocation: true
+            }), 'bottom-right');
 
             var nav = new mapboxgl.NavigationControl();
             map.addControl(nav, 'bottom-right');
+
+            
 
           map.addSource('naut', {
               type: 'vector',
