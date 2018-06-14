@@ -35,70 +35,88 @@ export class MapService {
       zoom: 12
     });
   }
+  var airports = [];
+  var filterEl = document.getElementById('feature-filter');
+  var listingEl = document.getElementById('feature-listing');
 
-   
-/*
-   function renderListings(features) {
+  listingEl.addEventListener('click', function(e) {
+    var clickedListing = e.
+    console.log('hi ;)');
+  });
+
+  function renderListings(features) {
     // Clear any existing listings
     listingEl.innerHTML = '';
     if (features.length) {
         features.forEach(function(feature) {
             var prop = feature.properties;
-            var item = document.createElement('a');
-            item.href = prop.wikipedia;
-            item.target = '_blank';
+            var item = document.createElement('li');
             item.textContent = prop.Name;
             listingEl.appendChild(item);
         });
 
         // Show the filter input
-        (<HTMLElement>filterEl.parentNode).style.display = 'block';
-
+        filterEl.style.display = 'block';
+        
     } else {
-        var empty = document.createElement('p');
-        empty.textContent = 'Drag the map to populate results';
-        listingEl.appendChild(empty);
-
-        // Hide the filter input
-
-        (<HTMLElement>filterEl.parentNode).style.display = 'none';
-
-        // remove features filter
-        map.setFilter('Nautgripir', ['has', 'Name']);
+        console.log('what!!!');
     }
 }
 
-   function normalize(string) {
-    return string.trim().toLowerCase();
-}
-
-
-
-   filterEl.addEventListener('test', function(e) {
-       console.log('what!!!!');
-    var element = e.currentTarget as HTMLInputElement;
-    var value = element.value;
-    value = normalize(value);
-
-    // Filter visible features that don't match the input value.
-    var filtered = listinn.filter(function(feature) {
-        var name = normalize(feature.properties.name);
-        var code = normalize(feature.properties.abbrev);
-        return name.indexOf(value) > -1 || code.indexOf(value) > -1;
+filterEl.addEventListener('keyup', function(e) {
+    var value = normalize(e.target.value);
+    var filtered = airports.filter(function(feature) {
+        var name = normalize(feature.properties.Name);
+        return name.indexOf(value) > -1;
     });
 
     // Populate the sidebar with filtered results
     renderListings(filtered);
 
-    // Set the filter to populate features into the layer.
-    map.setFilter('airport', ['match', ['get', 'abbrev'], filtered.map(function(feature) {
-        return feature.properties.abbrev;
-    }), true, false]);
 });
 
-// Call this function on initialization
-// passing an empty array to render an empty state
-renderListings([]);*/
+function normalize(string) {
+    return string.trim().toLowerCase();
+}
+
+function getUniqueFeatures(array, comparatorProperty) {
+    var existingFeatureKeys = {};
+    // Because features come from tiled vector data, feature geometries may be split
+    // or duplicated across tile boundaries and, as a result, features may appear
+    // multiple times in query results.
+    var uniqueFeatures = array.filter(function(el) {
+        if (existingFeatureKeys[el.properties[comparatorProperty]]) {
+            return false;
+        } else {
+            existingFeatureKeys[el.properties[comparatorProperty]] = true;
+            return true;
+        }
+    });
+
+    return uniqueFeatures;
+}
+
+  map.on('moveend', function() {
+    var features = map.queryRenderedFeatures({layers:['Nautgripir', 'Sauðfé', 'Hestar']});
+    console.log(features);
+
+    if (features) {
+        var uniqueFeatures = getUniqueFeatures(features, "Name");
+        // Populate features for the listing overlay.
+        renderListings(uniqueFeatures);
+    
+        // Clear the input container
+        filterEl.value = '';
+    
+        // Store the current features in sn `airports` variable to
+        // later use for filtering on `keyup`.
+        airports = uniqueFeatures;
+    }
+    
+});
+
+
+
 
    var popup = new mapboxgl.Popup({
     closeButton: false,
@@ -663,7 +681,7 @@ renderListings([]);*/
             type: 'vector',
             url: 'mapbox://dagsson.cjgxsaekx0cdv33o8zncly704-062up'
         });
-        map.addLayer({
+        var svin = map.addLayer({
             'id': 'Svín',
             'icon': '../assets/img/010-animals-2.png',
             'type': 'circle',
@@ -690,6 +708,7 @@ renderListings([]);*/
             document.getElementById('card-heading').setAttribute( 'style', 'background-color: #35978f' );
             var clickedPoint = e.features[0];
             flyToStore(clickedPoint);
+            console.log(svin);
         });
     
         // Change the cursor to a pointer when the mouse is over the states layer.
@@ -778,6 +797,7 @@ renderListings([]);*/
         });
            
       });
+
       var tabImg = [ '../assets/img/011-animals.png', '../assets/img/007-animals-5.png', '../assets/img/003-sea.png', '../assets/img/009-animals-3.png', '../assets/img/006-food-1.png', '../assets/img/008-animals-4.png', '../assets/img/001-transport.png', '../assets/img/002-animals-1.png', '../assets/img/004-nature.png', '../assets/img/010-animals-2.png', '../assets/img/005-food.png'];
       var toggleableLayerIds = [ 'Nautgripir', 'Sauðfé', 'Þörungar', 'Hestar', 'Fiskeldi', 'Alifuglar', 'Skip', 'Geitur', 'Matjurtir', 'Svín', 'Skelfiskur' ];
 

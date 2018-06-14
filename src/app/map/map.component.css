@@ -131,3 +131,25 @@ padding-bottom: 5px;
     right: 16px;
     height: 15px;
 }
+
+.map-overlay .listing {
+    overflow: auto;
+    max-height: 50%;
+    position: absolute;
+    list-style: none;
+    max-width: 200px;
+    background-color: #ffffff70;
+    margin-top: 180px;
+}
+
+#feature-listing li {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.map-overlay .listing a:last-child {
+    border: none;
+}
+
+.map-overlay .listing a:hover {
+    background: #f0f0f0;
+}
