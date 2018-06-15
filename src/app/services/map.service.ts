@@ -35,19 +35,37 @@ export class MapService {
       zoom: 12
     });
   }
-  var airports = [];
+  var producers = [];
   var filterEl = document.getElementById('feature-filter');
   var listingEl = document.getElementById('feature-listing');
+  var searchBtn = document.getElementById('leit-btn');
 
-  listingEl.addEventListener('click', function(e) {
-    var clickedListing = e.
-    console.log('hi ;)');
-  });
+  var currentFeature: string;
 
   function renderListings(features) {
     // Clear any existing listings
     listingEl.innerHTML = '';
-    if (features.length) {
+    for (i = 0; i < features.length; i++) {
+        currentFeature = features[i];
+        var prop = currentFeature.properties;
+        var listing = listingEl.appendChild(document.createElement('div'));
+        listing.className = 'item';
+        listing.id = 'listing-' + i;
+        var link = listing.appendChild(document.createElement('a'));
+        //link.href = '';
+        link.className = 'title';
+        link.dataPosition = i;
+        link.innerHTML = prop.Name;
+        link.addEventListener('click', function(e) {
+            // Update the currentFeature to the store associated with the clicked link
+            var clickedListing = features[this.dataPosition];
+            // 1. Fly to the point associated with the clicked link
+            flyToStore(clickedListing);   
+        }
+    }
+}
+
+    /*if (features.length) {
         features.forEach(function(feature) {
             var prop = feature.properties;
             var item = document.createElement('li');
@@ -60,18 +78,23 @@ export class MapService {
         
     } else {
         console.log('what!!!');
-    }
-}
+    }*/
 
 filterEl.addEventListener('keyup', function(e) {
     var value = normalize(e.target.value);
-    var filtered = airports.filter(function(feature) {
+    var filtered = producers.filter(function(feature) {
         var name = normalize(feature.properties.Name);
         return name.indexOf(value) > -1;
     });
 
     // Populate the sidebar with filtered results
     renderListings(filtered);
+    
+
+});
+
+searchBtn.addEventListener('click', function(e) {
+    e.preventDefault();
 
 });
 
@@ -97,26 +120,18 @@ function getUniqueFeatures(array, comparatorProperty) {
 }
 
   map.on('moveend', function() {
-    var features = map.queryRenderedFeatures({layers:['Nautgripir', 'Sauðfé', 'Hestar']});
+    var features = map.queryRenderedFeatures({layers:['Nautgripir', 'Sauðfé', 'Þörungar', 'Hestar', 'Fiskeldi', 'Alifuglar', 'Skip', 'Geitur', 'Matjurtir', 'Svín', 'Skelfiskur']});
     console.log(features);
 
     if (features) {
         var uniqueFeatures = getUniqueFeatures(features, "Name");
         // Populate features for the listing overlay.
         renderListings(uniqueFeatures);
-    
         // Clear the input container
         filterEl.value = '';
-    
-        // Store the current features in sn `airports` variable to
-        // later use for filtering on `keyup`.
-        airports = uniqueFeatures;
+        producers = uniqueFeatures;
     }
-    
 });
-
-
-
 
    var popup = new mapboxgl.Popup({
     closeButton: false,
@@ -150,7 +165,7 @@ function getUniqueFeatures(array, comparatorProperty) {
               'paint': {
                   'circle-radius': {
                       'base': 2,
-                      'stops': [[8, 3], [16, 180]]
+                      'stops': [[3, 3], [16, 32]]
                   },
                   'circle-color': 'rgb(84,48,5)'
               },
@@ -209,7 +224,7 @@ function getUniqueFeatures(array, comparatorProperty) {
               'paint': {
                   'circle-radius': {
                       'base': 2,
-                      'stops': [[8, 3], [16, 180]]
+                      'stops': [[3, 3], [16, 32]]
                   },
                   'circle-color': '#8c510a'
               },
@@ -271,7 +286,7 @@ function getUniqueFeatures(array, comparatorProperty) {
             'paint': {
                 'circle-radius': {
                     'base': 2,
-                    'stops': [[8, 3], [16, 180]]
+                    'stops': [[3, 3], [16, 32]]
                 },
                 'circle-color': '#bf812d'
             },
@@ -331,7 +346,7 @@ function getUniqueFeatures(array, comparatorProperty) {
             'paint': {
                 'circle-radius': {
                     'base': 2,
-                    'stops': [[8, 3], [16, 180]]
+                    'stops': [[3, 3], [16, 32]]
                 },
                 'circle-color': '#A57D28'
             },
@@ -391,7 +406,7 @@ function getUniqueFeatures(array, comparatorProperty) {
             'paint': {
                 'circle-radius': {
                     'base': 2,
-                    'stops': [[8, 3], [16, 180]]
+                    'stops': [[3, 3], [16, 32]]
                 },
                 'circle-color': '#dea613'
             },
@@ -451,7 +466,7 @@ function getUniqueFeatures(array, comparatorProperty) {
             'paint': {
                 'circle-radius': {
                     'base': 2,
-                    'stops': [[8, 3], [16, 180]]
+                    'stops': [[3, 3], [16, 32]]
                 },
                 'circle-color': '#b1200f'
             },
@@ -511,7 +526,7 @@ function getUniqueFeatures(array, comparatorProperty) {
             'paint': {
                 'circle-radius': {
                     'base': 2,
-                    'stops': [[8, 3], [16, 180]]
+                    'stops': [[3, 3], [16, 32]]
                 },
                 'circle-color': '#fa482e'
             },
@@ -571,7 +586,7 @@ function getUniqueFeatures(array, comparatorProperty) {
             'paint': {
                 'circle-radius': {
                     'base': 2,
-                    'stops': [[8, 3], [16, 180]]
+                    'stops': [[3, 3], [16, 32]]
                 },
                 'circle-color': '#f4a32e'
             },
@@ -631,7 +646,7 @@ function getUniqueFeatures(array, comparatorProperty) {
             'paint': {
                 'circle-radius': {
                     'base': 2,
-                    'stops': [[8, 3], [16, 180]]
+                    'stops': [[3, 3], [16, 32]]
                 },
                 'circle-color': '#80cdc1'
             },
@@ -692,7 +707,7 @@ function getUniqueFeatures(array, comparatorProperty) {
             'paint': {
                 'circle-radius': {
                     'base': 2,
-                    'stops': [[8, 3], [16, 180]]
+                    'stops': [[3, 3], [16, 32]]
                 },
                 'circle-color': '#35978f'
             },
@@ -753,7 +768,7 @@ function getUniqueFeatures(array, comparatorProperty) {
             'paint': {
                 'circle-radius': {
                     'base': 2,
-                    'stops': [[8, 3], [16, 180]]
+                    'stops': [[3, 3], [16, 32]]
                 },
                 'circle-color': '#01665e'
             },
