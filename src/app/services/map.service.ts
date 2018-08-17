@@ -20,7 +20,7 @@ export class MapService {
       console.log(this.producer.geometry.coordinates);
   }
 
-  constructor(
+  constructor (
     private http: HttpClient
   ) {}
 
@@ -35,6 +35,7 @@ getMap() {
   minZoom: 5.6,
   center: [-19.058391, 64.970529]
   });
+  
   map.addControl(new mapboxgl.AttributionControl(), 'top-left');
   var inputElement = <HTMLInputElement>document.getElementById('theinput');
   var listingEl = document.getElementById('feature-listing');
@@ -70,13 +71,6 @@ getMap() {
     }
   return null;
   }
-
-//var sourceFeatures = map.querySourceFeatures('foobar-points');
-
-  map.on('moveend', function() {
-    var sourceFeatures = map.querySourceFeatures('naut');
-    console.log(sourceFeatures);
-  });
 
   map.on('load', function () {
             map.addControl(new mapboxgl.GeolocateControl({
@@ -797,5 +791,6 @@ getMap() {
           layers.appendChild(link);
       }
       
-   }
-}
+  })
+  };
+};
