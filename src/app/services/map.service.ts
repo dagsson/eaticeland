@@ -3,6 +3,8 @@ import { environment } from '../../environments/environment';
 import { EIFood } from '../shared/food.model';
 import { FOOD_LIST} from '../shared/mock-food';
 import { FoodService } from '../services/food.service';
+import { GeoJson } from '../map';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as mapboxgl from 'mapbox-gl';
 
 declare var require: any
@@ -12,132 +14,71 @@ var listinn = [];
 var apiToken = environment.MAPBOX_API_KEY;
 @Injectable()
 export class MapService {
-  constructor() {
+  public producer: object; 
+  public setTest(value: object) {
+      this.producer = value;
+      console.log(this.producer.geometry.coordinates);
   }
 
-  getMap() {
-   var mapboxgl = require('mapbox-gl/dist/mapbox-gl.js'); 
-   mapboxgl.accessToken = apiToken
-   var map = new mapboxgl.Map({
-   container: 'map',
-   style: 'mapbox://styles/dagsson/cj99p8osy3in82smvtx2ie7x8',
-   zoom: 5.55,
-   minZoom: 5.6,
-   center: [-19.058391, 64.970529]
-   
-   });
-   
-   map.addControl(new mapboxgl.AttributionControl(), 'top-left');
+  constructor(
+    private http: HttpClient
+  ) {}
 
-   function flyToStore(currentFeature) {
+getMap() {
+  var http = this.http;
+  var mapboxgl = require('mapbox-gl/dist/mapbox-gl.js'); 
+  mapboxgl.accessToken = apiToken
+  var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/dagsson/cj99p8osy3in82smvtx2ie7x8',
+  zoom: 5.55,
+  minZoom: 5.6,
+  center: [-19.058391, 64.970529]
+  });
+  map.addControl(new mapboxgl.AttributionControl(), 'top-left');
+  var inputElement = <HTMLInputElement>document.getElementById('theinput');
+  var listingEl = document.getElementById('feature-listing');
+  var searchBtn = document.getElementById('leit-btn');
+  var popup = new mapboxgl.Popup({
+    closeButton: false,
+    closeOnClick: false
+  });
+
+  function flyToStore(currentFeature) {
     map.flyTo({
       center: currentFeature.geometry.coordinates,
       zoom: 12
     });
   }
-  var producers = [];
-  var filterEl = document.getElementById('feature-filter');
-  var listingEl = document.getElementById('feature-listing');
-  var searchBtn = document.getElementById('leit-btn');
 
-  var currentFeature: string;
+  searchBtn.addEventListener('click', function(r) {
+    var token = 'pk.eyJ1IjoiZGFnc3NvbiIsImEiOiJjajk0MTRqdWIzZGxwMzNycGtreDhxMmRxIn0.0zk_7FSvF_LlQ0AD2cChWQ';
+    var urls = ['https://api.mapbox.com/datasets/v1/dagsson/cjgxs7hoc07ly2wmx7wc7qjz9/features', 'https://api.mapbox.com/datasets/v1/dagsson/cjgxrynuy1nhn2wmoqz4sn8fu/features', 'https://api.mapbox.com/datasets/v1/dagsson/cjgxsaekx0cdv33o8zncly704/features'];
+    var goTo = inputElement.value;
+    var response;
+    for (var i in urls) {
+        http.get(urls[i]+ '?access_token=' + token).subscribe(val => {response= val['features'];
+        goToPoint(response, goTo);
+       });
+      };
+  });
 
-  function renderListings(features) {
-    // Clear any existing listings
-    listingEl.innerHTML = '';
-    for (i = 0; i < features.length; i++) {
-        currentFeature = features[i];
-        var prop = currentFeature.properties;
-        var listing = listingEl.appendChild(document.createElement('div'));
-        listing.className = 'item';
-        listing.id = 'listing-' + i;
-        var link = listing.appendChild(document.createElement('a'));
-        //link.href = '';
-        link.className = 'title';
-        link.dataPosition = i;
-        link.innerHTML = prop.Name;
-        link.addEventListener('click', function(e) {
-            // Update the currentFeature to the store associated with the clicked link
-            var clickedListing = features[this.dataPosition];
-            // 1. Fly to the point associated with the clicked link
-            flyToStore(clickedListing);   
-        }
+  function goToPoint(obj, name) {
+    for (var i = 0; i < obj.length; i++)
+    if (obj[i].properties.Name.toLowerCase() === name) {
+     flyToStore(obj[i]);
     }
-}
+  return null;
+  }
 
-    /*if (features.length) {
-        features.forEach(function(feature) {
-            var prop = feature.properties;
-            var item = document.createElement('li');
-            item.textContent = prop.Name;
-            listingEl.appendChild(item);
-        });
-
-        // Show the filter input
-        filterEl.style.display = 'block';
-        
-    } else {
-        console.log('what!!!');
-    }*/
-
-filterEl.addEventListener('keyup', function(e) {
-    var value = normalize(e.target.value);
-    var filtered = producers.filter(function(feature) {
-        var name = normalize(feature.properties.Name);
-        return name.indexOf(value) > -1;
-    });
-
-    // Populate the sidebar with filtered results
-    renderListings(filtered);
-    
-
-});
-
-searchBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-
-});
-
-function normalize(string) {
-    return string.trim().toLowerCase();
-}
-
-function getUniqueFeatures(array, comparatorProperty) {
-    var existingFeatureKeys = {};
-    // Because features come from tiled vector data, feature geometries may be split
-    // or duplicated across tile boundaries and, as a result, features may appear
-    // multiple times in query results.
-    var uniqueFeatures = array.filter(function(el) {
-        if (existingFeatureKeys[el.properties[comparatorProperty]]) {
-            return false;
-        } else {
-            existingFeatureKeys[el.properties[comparatorProperty]] = true;
-            return true;
-        }
-    });
-
-    return uniqueFeatures;
-}
+//var sourceFeatures = map.querySourceFeatures('foobar-points');
 
   map.on('moveend', function() {
-    var features = map.queryRenderedFeatures({layers:['Nautgripir', 'Sauðfé', 'Þörungar', 'Hestar', 'Fiskeldi', 'Alifuglar', 'Skip', 'Geitur', 'Matjurtir', 'Svín', 'Skelfiskur']});
-    console.log(features);
+    var sourceFeatures = map.querySourceFeatures('naut');
+    console.log(sourceFeatures);
+  });
 
-    if (features) {
-        var uniqueFeatures = getUniqueFeatures(features, "Name");
-        // Populate features for the listing overlay.
-        renderListings(uniqueFeatures);
-        // Clear the input container
-        filterEl.value = '';
-        producers = uniqueFeatures;
-    }
-});
-
-   var popup = new mapboxgl.Popup({
-    closeButton: false,
-    closeOnClick: false
-});
-        map.on('load', function () {
+  map.on('load', function () {
             map.addControl(new mapboxgl.GeolocateControl({
                 positionOptions: {
                     enableHighAccuracy: true
@@ -147,8 +88,6 @@ function getUniqueFeatures(array, comparatorProperty) {
 
             var nav = new mapboxgl.NavigationControl();
             map.addControl(nav, 'bottom-right');
-
-            
 
           map.addSource('naut', {
               type: 'vector',
@@ -810,11 +749,10 @@ function getUniqueFeatures(array, comparatorProperty) {
             map.getCanvas().style.cursor = '';
             popup.remove();
         });
-           
-      });
 
       var tabImg = [ '../assets/img/011-animals.png', '../assets/img/007-animals-5.png', '../assets/img/003-sea.png', '../assets/img/009-animals-3.png', '../assets/img/006-food-1.png', '../assets/img/008-animals-4.png', '../assets/img/001-transport.png', '../assets/img/002-animals-1.png', '../assets/img/004-nature.png', '../assets/img/010-animals-2.png', '../assets/img/005-food.png'];
       var toggleableLayerIds = [ 'Nautgripir', 'Sauðfé', 'Þörungar', 'Hestar', 'Fiskeldi', 'Alifuglar', 'Skip', 'Geitur', 'Matjurtir', 'Svín', 'Skelfiskur' ];
+      
 
       for (var i = 0; i < toggleableLayerIds.length; i++) {
           var id = toggleableLayerIds[i];
@@ -860,5 +798,4 @@ function getUniqueFeatures(array, comparatorProperty) {
       }
       
    }
-
 }

@@ -14,33 +14,29 @@
                     <li class="nav-item active">
                             
                     </li>
-                    <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Landssvæði
-                      </a>
-                      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </li>
-                    <li class="nav-item dropdown">
+            
+                    <!--<li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Markaðir
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                              <a class="dropdown-item" href="#">Action</a>
-                              <a class="dropdown-item" href="#">Another action</a>
-                              <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#">Something else here</a>
+                              <a class="dropdown-item" href="#">Bændamarkaður Hofósi</a>
+                              <a class="dropdown-item" href="#">Bændamarkaður Hvolsvelli</a>
                             </div>
-                          </li>
-                          <form class="form-inline">
-                                <fieldset>
-                                <input id='feature-filter' class="form-control mr-sm-2" type="search" placeholder="Sláðu inn leitarorð" aria-label="Search">
-                                <button id='leit-btn' class="btn btn-outline-success my-2 my-sm-0 pp-leit">Leita</button>
-                                </fieldset>
-                                                               
+                          </li>-->
+
+                          <form autocomplete="off">
+                            <div class="autocomplete" style="width:300px;">
+                              <input id="theinput" type="text" (keyup)="onKey($event)" placeholder="Frumframleiðandi">
+                              <div *ngIf="showDropDown" class="list-dropdown">
+                                  <div>
+                                    <div (click)="selectValue(filter)" class="producers" *ngFor="let filter of filtered">
+                                        {{filter}} 
+                                    </div>    
+                                  </div> 
+                                </div>
+                            </div>
+                            <input type="button" value="Finna stað" id="leit-btn">
                           </form>
                                                      
                   </ul>
@@ -48,10 +44,6 @@
                   
                 </div>
               </nav>
-              
-              
-                  
-              <!--<a class="list-group-item active" id="selectall">Velja allt</a>-->
 
               
   
